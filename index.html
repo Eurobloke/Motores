@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#6200EE">
+  <meta name="description" content="Sistema de Documentación Técnica para Agujas Ferroviarias">
+  <title>Agujas Ferroviarias - Sistema de Documentación</title>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ============================================ */
+    /* HEADER OPCIONAL */
+    /* ============================================ */
+    .header {
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      padding: 16px 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: white;
+    }
+
+    .logo-icon {
+      font-size: 32px;
+    }
+
+    .logo-text h1 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .logo-text p {
+      font-size: 12px;
+      opacity: 0.9;
+    }
+
+    .status {
+      background: rgba(0, 200, 83, 0.2);
+      border: 1px solid rgba(0, 200, 83, 0.5);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #00C853;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: #00C853;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* ============================================ */
+    /* IFRAME CONTAINER */
+    /* ============================================ */
+    .iframe-container {
+      flex: 1;
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .iframe-wrapper {
+      flex: 1;
+      position: relative;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* ============================================ */
+    /* LOADING STATE */
+    /* ============================================ */
+    .loading-overlay {
+      position: absolute;
+      inset: 0;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: opacity 0.3s ease;
+    }
+
+    .loading-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loading-content {
+      text-align: center;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid #E0E0E0;
+      border-top-color: #6200EE;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      color: #757575;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    /* ============================================ */
+    /* FOOTER OPCIONAL */
+    /* ============================================ */
+    .footer {
+      background: rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+      padding: 12px 20px;
+      text-align: center;
+      color: white;
+      font-size: 12px;
+    }
+
+    .footer a {
+      color: #03DAC6;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* ============================================ */
+    /* RESPONSIVE */
+    /* ============================================ */
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+      }
+
+      .iframe-container {
+        padding: 10px;
+      }
+
+      .iframe-wrapper {
+        border-radius: 12px;
+      }
+    }
+
+    /* ============================================ */
+    /* MODO SIN HEADER (FULLSCREEN) */
+    /* ============================================ */
+    body.fullscreen .header,
+    body.fullscreen .footer {
+      display: none;
+    }
+
+    body.fullscreen .iframe-container {
+      padding: 0;
+      max-width: none;
+    }
+
+    body.fullscreen .iframe-wrapper {
+      border-radius: 0;
+      box-shadow: none;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ============================================ -->
+  <!-- HEADER (opcional - puedes eliminarlo) -->
+  <!-- ============================================ -->
+  <header class="header">
+    <div class="header-content">
+      <div class="logo">
+        <span class="logo-icon">🚄</span>
+        <div class="logo-text">
+          <h1>Agujas Ferroviarias</h1>
+          <p>Sistema de Documentación Técnica</p>
+        </div>
+      </div>
+      <div class="status">
+        <span class="status-dot"></span>
+        <span>Sistema Activo</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================ -->
+  <!-- IFRAME CONTAINER -->
+  <!-- ============================================ -->
+  <div class="iframe-container">
+    <div class="iframe-wrapper">
+      <!-- LOADING STATE -->
+      <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+          <div class="spinner"></div>
+          <div class="loading-text">Cargando aplicación...</div>
+        </div>
+      </div>
+
+      <!-- IFRAME - REEMPLAZAR URL CON TU ENLACE DE GOOGLE APPS SCRIPT -->
+      <iframe 
+        id="appIframe"
+        src="https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec"
+        title="Aplicación de Agujas Ferroviarias"
+        allow="camera; geolocation"
+        loading="lazy">
+      </iframe>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- FOOTER (opcional - puedes eliminarlo) -->
+  <!-- ============================================ -->
+  <footer class="footer">
+    <p>
+      Sistema desarrollado para gestión técnica ferroviaria | 
+      <a href="#" onclick="toggleFullscreen(); return false;">Modo Pantalla Completa</a>
+    </p>
+  </footer>
+
+  <!-- ============================================ -->
+  <!-- JAVASCRIPT -->
+  <!-- ============================================ -->
+  <script>
+    // ==================== OCULTAR LOADING AL CARGAR IFRAME ====================
+    const iframe = document.getElementById('appIframe');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+
+    iframe.addEventListener('load', function() {
+      setTimeout(() => {
+        loadingOverlay.classList.add('hidden');
+      }, 500);
+    });
+
+    // ==================== MODO FULLSCREEN ====================
+    function toggleFullscreen() {
+      document.body.classList.toggle('fullscreen');
+      
+      // Guardar preferencia
+      const isFullscreen = document.body.classList.contains('fullscreen');
+      localStorage.setItem('fullscreenMode', isFullscreen);
+    }
+
+    // ==================== RESTAURAR PREFERENCIA AL CARGAR ====================
+    window.addEventListener('load', function() {
+      const savedMode = localStorage.getItem('fullscreenMode');
+      if (savedMode === 'true') {
+        document.body.classList.add('fullscreen');
+      }
+    });
+
+    // ==================== MANEJO DE ERRORES ====================
+    iframe.addEventListener('error', function() {
+      loadingOverlay.querySelector('.loading-text').textContent = 'Error al cargar la aplicación';
+      loadingOverlay.querySelector('.spinner').style.display = 'none';
+    });
+
+    // ==================== COMUNICACIÓN CON IFRAME (OPCIONAL) ====================
+    window.addEventListener('message', function(event) {
+      // Si necesitas comunicación bidireccional con el iframe
+      console.log('Mensaje recibido del iframe:', event.data);
+      
+      // Ejemplo: si el iframe envía un mensaje de "ready"
+      if (event.data === 'app-ready') {
+        console.log('✅ Aplicación lista');
+      }
+    });
+  </script>
+</body>
+</html>
