@@ -22,7 +22,7 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: #f5f5f5;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -30,91 +30,24 @@
     }
 
     /* ============================================ */
-    /* HEADER OPCIONAL */
-    /* ============================================ */
-    .header {
-      background: rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(10px);
-      padding: 16px 20px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    .header-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: white;
-    }
-
-    .logo-icon {
-      font-size: 32px;
-    }
-
-    .logo-text h1 {
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 2px;
-    }
-
-    .logo-text p {
-      font-size: 12px;
-      opacity: 0.9;
-    }
-
-    .status {
-      background: rgba(0, 200, 83, 0.2);
-      border: 1px solid rgba(0, 200, 83, 0.5);
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-      color: #00C853;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      background: #00C853;
-      border-radius: 50%;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    /* ============================================ */
-    /* IFRAME CONTAINER */
+    /* IFRAME CONTAINER - FULLSCREEN */
     /* ============================================ */
     .iframe-container {
       flex: 1;
       position: relative;
       width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
     }
 
     .iframe-wrapper {
-      flex: 1;
-      position: relative;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       background: white;
-      border-radius: 16px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
       overflow: hidden;
     }
 
@@ -169,87 +102,13 @@
       font-size: 14px;
       font-weight: 500;
     }
-
-    /* ============================================ */
-    /* FOOTER OPCIONAL */
-    /* ============================================ */
-    .footer {
-      background: rgba(0, 0, 0, 0.2);
-      backdrop-filter: blur(10px);
-      padding: 12px 20px;
-      text-align: center;
-      color: white;
-      font-size: 12px;
-    }
-
-    .footer a {
-      color: #03DAC6;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    /* ============================================ */
-    /* RESPONSIVE */
-    /* ============================================ */
-    @media (max-width: 768px) {
-      .header-content {
-        flex-direction: column;
-        gap: 12px;
-        text-align: center;
-      }
-
-      .iframe-container {
-        padding: 10px;
-      }
-
-      .iframe-wrapper {
-        border-radius: 12px;
-      }
-    }
-
-    /* ============================================ */
-    /* MODO SIN HEADER (FULLSCREEN) */
-    /* ============================================ */
-    body.fullscreen .header,
-    body.fullscreen .footer {
-      display: none;
-    }
-
-    body.fullscreen .iframe-container {
-      padding: 0;
-      max-width: none;
-    }
-
-    body.fullscreen .iframe-wrapper {
-      border-radius: 0;
-      box-shadow: none;
-    }
   </style>
   
 </head>
 
 <body>
   <!-- ============================================ -->
-  <!-- HEADER (opcional - puedes eliminarlo) -->
-  <!-- ============================================ -->
-  <header class="header">
-    <div class="header-content">
-      <div class="logo">
-        <span class="logo-icon">🚄</span>
-        <div class="logo-text">
-          <h1>Agujas Enclavamientos</h1>
-          <p>Sistema de Documentación Técnica</p>
-        </div>
-      </div>
-      <div class="status">
-        <span class="status-dot"></span>
-        <span>Sistema Activo</span>
-      </div>
-    </div>
-  </header>
-
-  <!-- ============================================ -->
-  <!-- IFRAME CONTAINER -->
+  <!-- IFRAME CONTAINER - SIN HEADER NI FOOTER -->
   <!-- ============================================ -->
   <div class="iframe-container">
     <div class="iframe-wrapper">
@@ -273,16 +132,6 @@
   </div>
 
   <!-- ============================================ -->
-  <!-- FOOTER (opcional - puedes eliminarlo) -->
-  <!-- ============================================ -->
-  <footer class="footer">
-    <p>
-      Sistema desarrollado para gestión técnica ferroviaria | 
-      <a href="#" onclick="toggleFullscreen(); return false;">Modo Pantalla Completa</a>
-    </p>
-  </footer>
-
-  <!-- ============================================ -->
   <!-- JAVASCRIPT -->
   <!-- ============================================ -->
   <script>
@@ -294,23 +143,6 @@
       setTimeout(() => {
         loadingOverlay.classList.add('hidden');
       }, 500);
-    });
-
-    // ==================== MODO FULLSCREEN ====================
-    function toggleFullscreen() {
-      document.body.classList.toggle('fullscreen');
-      
-      // Guardar preferencia
-      const isFullscreen = document.body.classList.contains('fullscreen');
-      localStorage.setItem('fullscreenMode', isFullscreen);
-    }
-
-    // ==================== RESTAURAR PREFERENCIA AL CARGAR ====================
-    window.addEventListener('load', function() {
-      const savedMode = localStorage.getItem('fullscreenMode');
-      if (savedMode === 'true') {
-        document.body.classList.add('fullscreen');
-      }
     });
 
     // ==================== MANEJO DE ERRORES ====================
